@@ -6,7 +6,6 @@ import os
 app = Flask(__name__)
 app.secret_key = 'project123'
 
-# MySQL Configuration
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'hansa123456'
@@ -14,7 +13,6 @@ app.config['MYSQL_DB'] = 'employee_system'
 
 mysql = MySQL(app)
 
-# Upload Configuration
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpeg', 'jpg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -25,7 +23,6 @@ if not os.path.exists(UPLOAD_FOLDER):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# ✅ Main Route (Login + Add + View/Search)
 @app.route('/', methods=['GET', 'POST'])
 def main():
     if request.method == 'POST':
@@ -75,7 +72,6 @@ def main():
     cur.close()
     return render_template('main.html', employees=employees, search=search, username=session.get('username'))
 
-# ✅ Update
 @app.route('/update/<int:id>', methods=['POST'])
 def update(id):
     if 'user_id' not in session:
@@ -106,7 +102,6 @@ def update(id):
     flash('Employee updated successfully!', 'success')
     return redirect(url_for('main'))
 
-# ✅ Delete
 @app.route('/delete/<int:id>')
 def delete(id):
     if 'user_id' not in session:
@@ -129,14 +124,12 @@ def delete(id):
     flash('Employee deleted successfully!', 'success')
     return redirect(url_for('main'))
 
-# ✅ Logout
 @app.route('/logout')
 def logout():
     session.clear()
     flash('Logged out successfully!', 'info')
     return redirect(url_for('main'))
 
-# ✅ Edit Form Loader
 @app.route('/edit/<int:id>')
 def edit(id):
     if 'user_id' not in session:
